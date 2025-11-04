@@ -17,10 +17,26 @@ function createCommandChoices() {
   return commandChoices;
 }
 
-// Simple test command
-const TEST_COMMAND = {
-  name: 'test',
-  description: 'Basic command',
+// Command for starting/joining an existing game
+const JOIN_COMMAND = {
+  name: 'join',
+  description: 'Join the Impostor Who? game!',
+  type: 1,
+  integration_types: [0, 1],
+  contexts: [0, 1, 2],
+};
+
+const NEWROUND_COMMAND = {
+  name: 'newround',
+  description: 'Start a new round in the Impostor Who? game!',
+  type: 1,
+  integration_types: [0, 1],
+  contexts: [0, 1, 2],
+};
+
+const RESET_COMMAND = {
+  name: 'reset',
+  description: 'Reset all active games!',
   type: 1,
   integration_types: [0, 1],
   contexts: [0, 1, 2],
@@ -44,6 +60,6 @@ const CHALLENGE_COMMAND = {
   contexts: [0, 2],
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND];
+const ALL_COMMANDS = [JOIN_COMMAND, NEWROUND_COMMAND, RESET_COMMAND];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);

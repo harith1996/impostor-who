@@ -10,13 +10,15 @@ import {
 } from 'discord-interactions';
 import { getRandomEmoji, DiscordRequest } from './utils.js';
 import { getShuffledOptions, getResult } from './game.js';
-
+import handleJoinCommand from './commands/join.js';
+import handleNewRoundCommand from './commands/newround.js';
+import handleResetCommand from './commands/reset.js';
 // Create an express app
 const app = express();
 // Get port, or default to 3000
 const PORT = process.env.PORT || 3000;
 // To keep track of our active games
-const activeGames = {};
+const activeGames = [];
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -40,30 +42,27 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
 
-    // "test" command
-    if (name === 'test') {
-      // Send a message into the channel where command was triggered from
-      return res.send({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          flags: InteractionResponseFlags.IS_COMPONENTS_V2,
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              // Fetches a random emoji to send from a helper function
-              content: `hello world ${getRandomEmoji()}`
-            }
-          ]
-        },
-      });
+    // "join" command
+    switch (name) {
+      case 'join':
+        // create a new game or add user to existing game
+        
+        const context = req.body.context;
+        // User ID is in user field for (G)DMs, and member for servers
+        const userObj = context === 0 ? req.body.member.user : req.body.user;
+        handleJoinCommand(activeGames, userObj, res);
+        break;
+      case 'newround':
+        handleNewRoundCommand(activeGames, res);
+        break;
+      case 'reset':
+        handleResetCommand(activeGames, res);
+        break;
+      default:
+        console.error(`unknown command: ${name}`);
+        return res.status(400).json({ error: 'unknown command' });
     }
-
-    console.error(`unknown command: ${name}`);
-    return res.status(400).json({ error: 'unknown command' });
   }
-
-  console.error('unknown interaction type', type);
-  return res.status(400).json({ error: 'unknown interaction type' });
 });
 
 app.listen(PORT, () => {
