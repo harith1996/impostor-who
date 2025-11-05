@@ -49,11 +49,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         
         const context = req.body.context;
         // User ID is in user field for (G)DMs, and member for servers
-        const userObj = context === 0 ? req.body.member.user : req.body.user;
+        const userObj = context === 0 ? req.body.member : req.body.user;
         handleJoinCommand(activeGames, userObj, res);
         break;
       case 'newround':
-        handleNewRoundCommand(activeGames, res);
+        const { word_picker, impostor } = await handleNewRoundCommand(activeGames, res);
+        word_picker.send(`You are the Word Picker! Choose a word`);
         break;
       case 'reset':
         handleResetCommand(activeGames, res);

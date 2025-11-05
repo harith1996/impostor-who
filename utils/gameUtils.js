@@ -4,8 +4,8 @@ const create_game = (userIds) => {
         'state': 'waiting',
     };
 }
-const find_player_in_game = (game, userId) => {
-    return game.players.find(player => player.id === userId);
+const find_player_in_game = (game, member) => {
+    return game.players.find(player => player.user.id === member.user.id);
 }
 const get_word_picker_and_impostor = (game) => {
     //pick two random players as the word picker and impostor

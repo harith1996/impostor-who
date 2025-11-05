@@ -11,6 +11,7 @@ export default async function handleNewRoundCommand(activeGames, res) {
         return sendMsg(res, 'Not enough players to start a new round. Please wait for more players to join!');
     }
     const { word_picker, impostor } = get_word_picker_and_impostor(game);
-    console.log(`New round: Word Picker - ${word_picker.username}, Impostor - ${impostor.username}`);
-    return sendMsg(res, `New round started!\nWord Picker: <@${word_picker.id}>\nImpostor: <@${impostor.id}>`);
+    console.log(`New round: Word Picker - ${word_picker.nick}, Impostor - ${impostor.nick}`);
+    sendMsg(res, `New round started!\nWord Picker: <@${word_picker.user.id}>\nImpostor: <@${impostor.user.id}>`);
+    return { word_picker, impostor };
 }
