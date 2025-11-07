@@ -1,9 +1,20 @@
 import { DiscordRequest } from "../utils.js";
-
-const sendMsg = (res, messageContent) => {
-    // Function to send a confirmation message to a Discord channel
-    // Implementation depends on your Discord bot setup
+const CHANNEL_ID = process.env.CHANNEL_ID;
+const respond = (res, messageContent) => {
     return res.status(200).json({ type: 4, data: { content: messageContent } });
+}
+
+export async function sendGameChannelMessage(content) {
+  const res = await DiscordRequest(`/channels/${CHANNEL_ID}/messages`, {
+    method: 'POST',
+    body: { "content": content },
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`send channel message failed: ${res.status} ${text}`);
+  }
+  return await res.json();
 }
 
 export async function sendDM(recipientId, content) {
@@ -34,4 +45,4 @@ export async function sendDM(recipientId, content) {
   return await sendRes.json();
 }
 
-export default sendMsg;
+export default respond;

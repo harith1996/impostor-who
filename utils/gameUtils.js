@@ -15,4 +15,9 @@ const get_word_picker_and_impostor = (game) => {
         impostor: shuffledPlayers[1],
     };
 }
-export { create_game, find_player_in_game, get_word_picker_and_impostor };
+const getRandomPlayer = (players) => {
+    const randomIndex = Math.floor(Math.random() * players.length);
+    return players[randomIndex];
+}
+    
+export { create_game, find_player_in_game, get_word_picker_and_impostor, getRandomPlayer };

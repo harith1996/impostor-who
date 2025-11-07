@@ -1,6 +1,6 @@
 import {create_game} from "../utils/gameUtils.js";
 import {find_player_in_game} from "../utils/gameUtils.js";
-import sendMsg from "../utils/messageUtils.js";
+import respond from "../utils/messageUtils.js";
 
 export default async function handleJoinCommand(activeGames, memberObj, res) {
     const nick = memberObj.nick;
@@ -15,12 +15,12 @@ export default async function handleJoinCommand(activeGames, memberObj, res) {
         // add user to the first existing game (for simplicity)
         const existingGame = activeGames[0];
         if(find_player_in_game(existingGame, memberObj)) {
-            return sendMsg(res, `User <@${userId}> is already in the game!`);
+            return respond(res, `User <@${userId}> is already in the game!`);
         }
         else {
             existingGame.players.push(memberObj);
         }
     }
     console.log('Active games:', activeGames);
-    return sendMsg(res, `User <@${userId}> joined the game!`);
+    return respond(res, `User <@${userId}> joined the game!`);
 }

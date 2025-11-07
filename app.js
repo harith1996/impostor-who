@@ -15,6 +15,7 @@ import handleJoinCommand from './commands/join.js';
 import handleNewRoundCommand from './commands/newround.js';
 import handleResetCommand from './commands/reset.js';
 import { wordPickerMessage, impostorMessage } from './assets/messages.js';
+import handlePickWordCommand from './commands/pickWord.js';
 // Create an express app
 const app = express();
 // Get port, or default to 3000
@@ -45,25 +46,18 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
    */
   if (type === InteractionType.APPLICATION_COMMAND) {
     const { name } = data;
-
-    // "join" command
+    const context = req.body.context;
+    // User ID is in user field for (G)DMs, and member for servers
+    const userObj = context === 0 ? req.body.member : req.body.user;
     switch (name) {
       case 'join':
-        // create a new game or add user to existing game
-        
-        const context = req.body.context;
-        // User ID is in user field for (G)DMs, and member for servers
-        const userObj = context === 0 ? req.body.member : req.body.user;
         handleJoinCommand(activeGames, userObj, res);
         break;
       case 'newround':
-        const { word_picker, impostor } = await handleNewRoundCommand(activeGames, res);
-        try {
-          await sendDM(word_picker.user.id, wordPickerMessage);
-          await sendDM(impostor.user.id, impostorMessage);
-        } catch (err) {
-          console.error('Failed to send DMs to word picker and impostor:', err);
-        }
+        await handleNewRoundCommand(activeGames, res);
+        break;
+      case 'pickword':
+        await handlePickWordCommand(activeGames, userObj, data.options[0].value, res);
         break;
       case 'reset':
         handleResetCommand(activeGames, res);

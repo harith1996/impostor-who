@@ -23,7 +23,7 @@ const JOIN_COMMAND = {
   description: 'Join the Impostor Who? game!',
   type: 1,
   integration_types: [0, 1],
-  contexts: [0, 1, 2],
+  contexts: [0],
 };
 
 const NEWROUND_COMMAND = {
@@ -31,7 +31,7 @@ const NEWROUND_COMMAND = {
   description: 'Start a new round in the Impostor Who? game!',
   type: 1,
   integration_types: [0, 1],
-  contexts: [0, 1, 2],
+  contexts: [0],
 };
 
 const RESET_COMMAND = {
@@ -39,27 +39,26 @@ const RESET_COMMAND = {
   description: 'Reset all active games!',
   type: 1,
   integration_types: [0, 1],
-  contexts: [0, 1, 2],
+  contexts: [0],
 };
 
 // Command containing options
-const CHALLENGE_COMMAND = {
-  name: 'challenge',
-  description: 'Challenge to a match of rock paper scissors',
+const PICK_WORD_COMMAND = {
+  name: 'pickword',
+  description: 'Pick a word for the game',
   options: [
     {
       type: 3,
-      name: 'object',
-      description: 'Pick your object',
-      required: true,
-      choices: createCommandChoices(),
+      name: 'word',
+      description: 'Pick your word',
+      required: true
     },
   ],
   type: 1,
   integration_types: [0, 1],
-  contexts: [0, 2],
+  contexts: [1, 2],
 };
 
-const ALL_COMMANDS = [JOIN_COMMAND, NEWROUND_COMMAND, RESET_COMMAND];
+const ALL_COMMANDS = [JOIN_COMMAND, NEWROUND_COMMAND, RESET_COMMAND, PICK_WORD_COMMAND];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
