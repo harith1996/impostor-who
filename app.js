@@ -9,16 +9,20 @@ import {
   verifyKeyMiddleware,
 } from 'discord-interactions';
 import { getRandomEmoji, DiscordRequest } from './utils.js';
+import { sendDM } from './utils/messageUtils.js';
 import { getShuffledOptions, getResult } from './game.js';
 import handleJoinCommand from './commands/join.js';
 import handleNewRoundCommand from './commands/newround.js';
 import handleResetCommand from './commands/reset.js';
+import { wordPickerMessage, impostorMessage } from './assets/messages.js';
 // Create an express app
 const app = express();
 // Get port, or default to 3000
 const PORT = process.env.PORT || 3000;
 // To keep track of our active games
 const activeGames = [];
+
+const TOKEN = process.env.DISCORD_TOKEN;
 
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
@@ -54,7 +58,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         break;
       case 'newround':
         const { word_picker, impostor } = await handleNewRoundCommand(activeGames, res);
-        word_picker.send(`You are the Word Picker! Choose a word`);
+        try {
+          await sendDM(TOKEN, word_picker.user.id, wordPickerMessage);
+          await sendDM(TOKEN, impostor.user.id, impostorMessage);
+        } catch (err) {
+          console.error('Failed to send DMs to word picker and impostor:', err);
+        }
         break;
       case 'reset':
         handleResetCommand(activeGames, res);

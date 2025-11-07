@@ -12,6 +12,6 @@ export default async function handleNewRoundCommand(activeGames, res) {
     }
     const { word_picker, impostor } = get_word_picker_and_impostor(game);
     console.log(`New round: Word Picker - ${word_picker.nick}, Impostor - ${impostor.nick}`);
-    sendMsg(res, `New round started!\nWord Picker: <@${word_picker.user.id}>\nImpostor: <@${impostor.user.id}>`);
+    sendMsg(res, `New round started! Wait for the word picker to choose a word! 👀`);
     return { word_picker, impostor };
 }
