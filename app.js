@@ -59,8 +59,8 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       case 'newround':
         const { word_picker, impostor } = await handleNewRoundCommand(activeGames, res);
         try {
-          await sendDM(TOKEN, word_picker.user.id, wordPickerMessage);
-          await sendDM(TOKEN, impostor.user.id, impostorMessage);
+          await sendDM(word_picker.user.id, wordPickerMessage);
+          await sendDM(impostor.user.id, impostorMessage);
         } catch (err) {
           console.error('Failed to send DMs to word picker and impostor:', err);
         }

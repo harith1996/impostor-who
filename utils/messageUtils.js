@@ -1,8 +1,4 @@
-const API_URL = 'https://discord.com/api/v10';
-const AUTH_HEADER = (botToken) => ({
-    'Authorization': `Bot ${botToken}`,
-    'Content-Type': 'application/json',
-});
+import { DiscordRequest } from "../utils.js";
 
 const sendMsg = (res, messageContent) => {
     // Function to send a confirmation message to a Discord channel
@@ -10,12 +6,11 @@ const sendMsg = (res, messageContent) => {
     return res.status(200).json({ type: 4, data: { content: messageContent } });
 }
 
-export async function sendDM(botToken, recipientId, content) {
+export async function sendDM(recipientId, content) {
   // create DM channel
-  const createRes = await fetch(`${API_URL}/users/@me/channels`, {
+  const createRes = await DiscordRequest(`/users/@me/channels`, {
     method: 'POST',
-    headers: AUTH_HEADER(botToken),
-    body: JSON.stringify({ recipient_id: recipientId }),
+    body: { "recipient_id": recipientId },
   });
 
   if (!createRes.ok) {
@@ -26,10 +21,9 @@ export async function sendDM(botToken, recipientId, content) {
   const channelData = await createRes.json();
 
   // send the message
-  const sendRes = await fetch(`${API_URL}/channels/${channelData.id}/messages`, {
+  const sendRes = await DiscordRequest(`/channels/${channelData.id}/messages`, {
     method: 'POST',
-    headers: AUTH_HEADER(botToken),
-    body: JSON.stringify({ content }),
+    body: { "content": content },
   });
 
   if (!sendRes.ok) {
