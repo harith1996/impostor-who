@@ -23,9 +23,14 @@ export default async function handlePickWordCommand(activeGames, invoker, word, 
             // set the word for the round
             game.currentRound.word = word;
             console.log(`Word picker ${nick} picked the word: ${word}`);
-            sendDM(userId, `You picked the word: **${word}**. Let the round begin!`);
         }
         const starter = getRandomPlayer(activeGames[0].players);
-        return sendGameChannelMessage(`The word has been picked, and <@${starter.user.id}> will start this round!`);
+        //DM the word to everyone except the impostor
+        for (const player of game.players) {
+            if (player.user.id !== game.currentRound.impostor.user.id) {
+                await sendDM(player.user.id, `⚠️ TOP SECRET : The word for this round is: **${word}**. When it's your turn, say a similar word!`);
+            }
+        }
+        return sendDM(starter.user.id, `You will start this round!`);
     }
 }
