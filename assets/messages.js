@@ -1,2 +1,2 @@
-export const wordPickerMessage = "You are the Word Picker! Choose a word"
-export const impostorMessage = "You are the Impostor! Try to blend in without knowing the word."
+export const wordPickerMessage = "SHHHHH. You are the Word Picker! type **/pickword** here to pick a word.";
+export const impostorMessage = "SHHHHH. You are the Impostor! Try to blend in without knowing the word."
